@@ -1,4 +1,4 @@
-export default [
+const array = [
   {
     preview:
       "https://cdn.pixabay.com/photo/2019/05/14/16/43/himilayan-blue-poppy-4202825__340.jpg",
@@ -63,3 +63,46 @@ export default [
     description: "Lighthouse Coast Sea",
   },
 ];
+
+const ulList = document.querySelector(".js-gallery");
+array.forEach((el) => {
+  ulList.insertAdjacentHTML(
+    "afterbegin",
+    `<li class="gallery__item">
+      <a class="gallery__link" href="${el.original}">        
+        <img
+          class="gallery__image"
+          src="${el.preview}"
+          data-source="${el.original}"
+          alt="${el.description}"
+        />
+      </a>
+    </li>`
+  );
+});
+
+const bigImg = document.querySelector("[data-source]");
+const div = document.querySelector(".js-lightbox");
+
+ulList.addEventListener("click", (e) => {
+  e.preventDefault();
+  if (e.target.nodeName !== "IMG") {
+    return;
+  }
+  let img = e.target;
+  openModal(img.dataset.source);
+});
+
+const openModal = function (picture) {
+  div.classList.add("is-open");
+  console.log(div);
+  let img = document.querySelector(".lightbox__image");
+  img.removeAttribute("src");
+  img.setAttribute("src", picture);
+};
+
+const btn = document.querySelector(".lightbox__button");
+
+btn.addEventListener("click", () => {
+  div.classList.remove("is-open");
+});
