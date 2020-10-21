@@ -81,9 +81,8 @@ array.forEach((el) => {
   );
 });
 
-const bigImg = document.querySelector("[data-source]");
+const overlay = document.querySelector("[data-source]");
 const div = document.querySelector(".js-lightbox");
-
 ulList.addEventListener("click", (e) => {
   e.preventDefault();
   if (e.target.nodeName !== "IMG") {
@@ -93,16 +92,54 @@ ulList.addEventListener("click", (e) => {
   openModal(img.dataset.source);
 });
 
-const openModal = function (picture) {
-  div.classList.add("is-open");
-  console.log(div);
-  let img = document.querySelector(".lightbox__image");
-  img.removeAttribute("src");
-  img.setAttribute("src", picture);
-};
-
 const btn = document.querySelector(".lightbox__button");
-
 btn.addEventListener("click", () => {
   div.classList.remove("is-open");
 });
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    div.classList.remove("is-open");
+  }
+});
+
+const openModal = function (picture) {
+  div.classList.add("is-open");
+  div.addEventListener("click", closeModal);
+  let img = document.querySelector(".lightbox__image");
+  img.removeAttribute("src");
+  img.setAttribute("src", picture);
+  array.forEach((el, i) => {
+    if (el.original === img.src) {
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") {
+          if (i > 0) {
+            i = i - 1;
+            img.removeAttribute("src");
+            img.setAttribute("src", array[i].original);
+          } else {
+            i = i + array.length - 1;
+            img.removeAttribute("src");
+            img.setAttribute("src", array[i].original);
+          }
+        } else if (e.key === "ArrowLeft") {
+          if (i < array.length - 1) {
+            i = i + 1;
+            img.removeAttribute("src");
+            img.setAttribute("src", array[i].original);
+          } else {
+            i = i - array.length + 1;
+            img.removeAttribute("src");
+            img.setAttribute("src", array[i].original);
+          }
+        }
+      });
+    }
+  });
+};
+
+const closeModal = function (e) {
+  if (e.target.nodeName !== "IMG") {
+    div.classList.remove("is-open");
+    div.removeEventListener("click", closeModal);
+  }
+};
