@@ -67,7 +67,7 @@ const array = [
 const ulList = document.querySelector(".js-gallery");
 array.forEach((el) => {
   ulList.insertAdjacentHTML(
-    "afterbegin",
+    "beforeend",
     `<li class="gallery__item">
       <a class="gallery__link" href="${el.original}">        
         <img
@@ -85,11 +85,12 @@ const overlay = document.querySelector("[data-source]");
 const div = document.querySelector(".js-lightbox");
 ulList.addEventListener("click", (e) => {
   e.preventDefault();
-  if (e.target.nodeName !== "IMG") {
+  if (e.target.nodeName === "IMG") {
+    let img = e.target;
+    openModal(img.dataset.source);
+  } else {
     return;
   }
-  let img = e.target;
-  openModal(img.dataset.source);
 });
 
 const btn = document.querySelector(".lightbox__button");
@@ -112,22 +113,22 @@ const openModal = function (picture) {
     if (el.original === img.src) {
       window.addEventListener("keydown", (e) => {
         if (e.key === "ArrowRight") {
-          if (i > 0) {
-            i = i - 1;
-            img.removeAttribute("src");
-            img.setAttribute("src", array[i].original);
-          } else {
-            i = i + array.length - 1;
-            img.removeAttribute("src");
-            img.setAttribute("src", array[i].original);
-          }
-        } else if (e.key === "ArrowLeft") {
           if (i < array.length - 1) {
             i = i + 1;
             img.removeAttribute("src");
             img.setAttribute("src", array[i].original);
           } else {
             i = i - array.length + 1;
+            img.removeAttribute("src");
+            img.setAttribute("src", array[i].original);
+          }
+        } else if (e.key === "ArrowLeft") {
+          if (i > 0) {
+            i = i - 1;
+            img.removeAttribute("src");
+            img.setAttribute("src", array[i].original);
+          } else {
+            i = i + array.length - 1;
             img.removeAttribute("src");
             img.setAttribute("src", array[i].original);
           }
